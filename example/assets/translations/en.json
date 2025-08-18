@@ -1,0 +1,11 @@
+{
+  "app": {
+    "title": "My App",
+    "hello": "Hello",
+    "welcome_user": "Welcome, {name}!"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout"
+  }
+}

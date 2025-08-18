@@ -1,0 +1,35 @@
+name: auto_easy_localization
+description: A powerful Dart/Flutter tool for automated translation and localization management using Google Translate's free API. Supports smart translation mode, batch processing, and 70+ languages.
+version: 0.0.2
+homepage: https://github.com/ArdaKoksall/auto_easy_localization
+repository: https://github.com/ArdaKoksall/auto_easy_localization
+issue_tracker: https://github.com/ArdaKoksall/auto_easy_localization/issues
+documentation: https://github.com/ArdaKoksall/auto_easy_localization#readme
+
+topics:
+  - localization
+  - translation
+  - i18n
+  - flutter
+  - dart
+
+
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  args: ^2.7.0
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  path: ^1.9.1
+  yaml: ^3.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+
