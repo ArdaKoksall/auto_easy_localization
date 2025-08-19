@@ -54,14 +54,17 @@ class ProgressBar {
     final elapsed = DateTime.now().difference(_startTime);
     final avgTimePerLocale = current > 0 ? elapsed.inSeconds / current : 0;
     final remainingLocales = total - current;
-    final estimatedRemaining = Duration(seconds: (avgTimePerLocale * remainingLocales).round());
+    final estimatedRemaining = Duration(
+      seconds: (avgTimePerLocale * remainingLocales).round(),
+    );
 
     final elapsedStr = _formatDuration(elapsed);
     final etaStr = current > 0 ? _formatDuration(estimatedRemaining) : '--:--';
     final keysInfo = _currentKeysCount > 0 ? ' • $_currentKeysCount keys' : '';
 
     // Simple single-line output
-    final output = '$spinner $_currentLocale ${percentage.toStringAsFixed(1)}% [$bar] $current/$total • $elapsedStr • ETA: $etaStr$keysInfo';
+    final output =
+        '$spinner $_currentLocale ${percentage.toStringAsFixed(1)}% [$bar] $current/$total • $elapsedStr • ETA: $etaStr$keysInfo';
 
     // Use carriage return to overwrite the line
     print('\r$output');
@@ -69,7 +72,9 @@ class ProgressBar {
 
   String _buildCompletionMessage(Duration duration) {
     final durationStr = _formatDuration(duration);
-    final avgTime = total > 0 ? (duration.inMilliseconds / total / 1000).toStringAsFixed(1) : '0';
+    final avgTime = total > 0
+        ? (duration.inMilliseconds / total / 1000).toStringAsFixed(1)
+        : '0';
 
     return '''
 ✨ Translation completed successfully!
@@ -95,4 +100,3 @@ class ProgressBar {
     print('\n⚠️  Warning: $message');
   }
 }
-

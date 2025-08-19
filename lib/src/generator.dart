@@ -22,15 +22,16 @@ class AutoLocalizationGenerator {
     _excludedKeysHandler = ExcludedKeysHandler(_config.excludedKeysPath);
   }
 
-
   Future<void> smartGenerate() async {
     try {
       await _validateSetup();
-      
+
       // Load excluded keys
       await _excludedKeysHandler.loadExcludedKeys();
 
-      final sourceTranslations = await _fileHandler.readLocaleFile(_config.sourceLocale);
+      final sourceTranslations = await _fileHandler.readLocaleFile(
+        _config.sourceLocale,
+      );
       final existingLocales = await _fileHandler.getExistingLocales();
 
       final missingLocales = _config.targetLocales
@@ -41,7 +42,8 @@ class AutoLocalizationGenerator {
           .where((locale) => existingLocales.contains(locale))
           .toList();
 
-      final totalOperations = missingLocales.length + existingTargetLocales.length;
+      final totalOperations =
+          missingLocales.length + existingTargetLocales.length;
       if (totalOperations == 0) {
         print('✅ All translations are up to date!');
         return;
@@ -85,7 +87,9 @@ class AutoLocalizationGenerator {
 
     int totalKeys = 0;
     if (existingLocales.contains(_config.sourceLocale)) {
-      final sourceTranslations = await _fileHandler.readLocaleFile(_config.sourceLocale);
+      final sourceTranslations = await _fileHandler.readLocaleFile(
+        _config.sourceLocale,
+      );
       totalKeys = sourceTranslations.length;
     }
 
@@ -120,10 +124,12 @@ class AutoLocalizationGenerator {
   }
 
   Future<void> _updateExistingLocale(
-      Map<String, String> sourceTranslations,
-      String targetLocale,
-      ) async {
-    final existingTranslations = await _fileHandler.readLocaleFile(targetLocale);
+    Map<String, String> sourceTranslations,
+    String targetLocale,
+  ) async {
+    final existingTranslations = await _fileHandler.readLocaleFile(
+      targetLocale,
+    );
 
     final missingKeys = <String, String>{};
     for (final entry in sourceTranslations.entries) {
@@ -135,9 +141,11 @@ class AutoLocalizationGenerator {
     if (missingKeys.isEmpty) return;
 
     // Filter out excluded keys from translation but keep them in the final file
-    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(missingKeys);
+    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(
+      missingKeys,
+    );
     final excludedKeysInMissing = <String, String>{};
-    
+
     // Collect excluded keys that should not be translated
     for (final entry in missingKeys.entries) {
       if (_excludedKeysHandler.isKeyExcluded(entry.key)) {
@@ -146,7 +154,7 @@ class AutoLocalizationGenerator {
     }
 
     // Translate only non-excluded keys
-    final translatedKeys = keysToTranslate.isNotEmpty 
+    final translatedKeys = keysToTranslate.isNotEmpty
         ? await _translateService.translateBatch(
             keysToTranslate,
             _config.sourceLocale,
@@ -156,7 +164,7 @@ class AutoLocalizationGenerator {
 
     // Combine translated keys with excluded keys (keeping original values)
     final updatedTranslations = {
-      ...existingTranslations, 
+      ...existingTranslations,
       ...translatedKeys,
       ...excludedKeysInMissing,
     };
@@ -169,17 +177,20 @@ class AutoLocalizationGenerator {
   }
 
   Future<void> _generateSingleLocale(
-      Map<String, String> sourceTranslations,
-      String targetLocale,
-      ) async {
-    if (await _fileHandler.localeFileExists(targetLocale) && !_config.overwriteExisting) {
+    Map<String, String> sourceTranslations,
+    String targetLocale,
+  ) async {
+    if (await _fileHandler.localeFileExists(targetLocale) &&
+        !_config.overwriteExisting) {
       return;
     }
 
     // Filter out excluded keys from translation but keep them in the final file
-    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(sourceTranslations);
+    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(
+      sourceTranslations,
+    );
     final excludedKeys = <String, String>{};
-    
+
     // Collect excluded keys that should not be translated
     for (final entry in sourceTranslations.entries) {
       if (_excludedKeysHandler.isKeyExcluded(entry.key)) {
@@ -188,7 +199,7 @@ class AutoLocalizationGenerator {
     }
 
     // Translate only non-excluded keys
-    final translatedKeys = keysToTranslate.isNotEmpty 
+    final translatedKeys = keysToTranslate.isNotEmpty
         ? await _translateService.translateBatch(
             keysToTranslate,
             _config.sourceLocale,
@@ -197,10 +208,7 @@ class AutoLocalizationGenerator {
         : <String, String>{};
 
     // Combine translated keys with excluded keys (keeping original values)
-    final finalTranslations = {
-      ...translatedKeys,
-      ...excludedKeys,
-    };
+    final finalTranslations = {...translatedKeys, ...excludedKeys};
 
     await _fileHandler.writeLocaleFile(
       targetLocale,

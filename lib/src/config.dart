@@ -17,7 +17,6 @@ class TranslationConfig {
     this.maxRetries = 3,
   });
 
-
   List<String> validate() {
     final errors = <String>[];
 

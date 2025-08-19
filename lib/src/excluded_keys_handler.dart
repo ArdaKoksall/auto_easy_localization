@@ -12,23 +12,30 @@ class ExcludedKeysHandler {
     final file = File(excludedKeysPath);
     if (!await file.exists()) {
       _excludedKeys = [];
-      print('⚠️  Warning: Excluded keys file not found at ${file.path}. No keys will be excluded.');
+      print(
+        '⚠️  Warning: Excluded keys file not found at ${file.path}. No keys will be excluded.',
+      );
       return;
     }
 
     try {
       final content = await file.readAsString();
       final data = jsonDecode(content);
-      
+
       if (data is List) {
         _excludedKeys = data.cast<String>();
-      } else if (data is Map<String, dynamic> && data.containsKey('excluded_keys')) {
+      } else if (data is Map<String, dynamic> &&
+          data.containsKey('excluded_keys')) {
         _excludedKeys = (data['excluded_keys'] as List).cast<String>();
       } else {
-        throw FormatException('Invalid excluded_keys.json format. Expected array of strings or object with "excluded_keys" property.');
+        throw FormatException(
+          'Invalid excluded_keys.json format. Expected array of strings or object with "excluded_keys" property.',
+        );
       }
-      
-      print('📌 Loaded ${_excludedKeys.length} excluded keys from ${file.path}');
+
+      print(
+        '📌 Loaded ${_excludedKeys.length} excluded keys from ${file.path}',
+      );
     } catch (e) {
       print('⚠️  Warning: Failed to load excluded keys from ${file.path}: $e');
       _excludedKeys = [];
@@ -43,13 +50,13 @@ class ExcludedKeysHandler {
   /// Filters out excluded keys from a translation map
   Map<String, String> filterExcludedKeys(Map<String, String> translations) {
     final filtered = <String, String>{};
-    
+
     for (final entry in translations.entries) {
       if (!isKeyExcluded(entry.key)) {
         filtered[entry.key] = entry.value;
       }
     }
-    
+
     return filtered;
   }
 

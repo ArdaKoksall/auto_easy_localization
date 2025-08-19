@@ -24,10 +24,10 @@ class LocaleFileHandler {
   }
 
   Future<void> writeLocaleFile(
-      String locale,
-      Map<String, String> translations, {
-        bool overwrite = false,
-      }) async {
+    String locale,
+    Map<String, String> translations, {
+    bool overwrite = false,
+  }) async {
     final file = File(path.join(translationsPath, '$locale.json'));
 
     if (await file.exists() && !overwrite) {
