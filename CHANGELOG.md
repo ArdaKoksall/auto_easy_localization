@@ -1,3 +1,7 @@
+## 1.0.0
+- First full release
+
+
 ## 0.0.4
 
 - **BREAKING CHANGE**: Removed all command-line arguments support

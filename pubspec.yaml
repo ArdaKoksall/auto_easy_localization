@@ -1,6 +1,6 @@
 name: auto_easy_localization
 description: A powerful Dart/Flutter tool for automated translation and localization management using Google Translate's free API. Supports smart translation mode, batch processing, and 70+ languages.
-version: 0.0.4
+version: 1.0.0
 homepage: https://github.com/ArdaKoksall/auto_easy_localization
 repository: https://github.com/ArdaKoksall/auto_easy_localization
 issue_tracker: https://github.com/ArdaKoksall/auto_easy_localization/issues
