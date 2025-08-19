@@ -1,3 +1,6 @@
+## 1.0.1
+- Mini patch to fix syntax.
+
 ## 1.0.0
 - First full release
 
