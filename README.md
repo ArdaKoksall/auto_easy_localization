@@ -21,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  auto_easy_localization: ^1.0.0
+  auto_easy_localization: ^1.0.1
 ```
 
 Or run the following command:
