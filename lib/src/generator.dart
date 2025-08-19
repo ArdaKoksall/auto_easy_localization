@@ -20,11 +20,9 @@ class AutoLocalizationGenerator {
       maxRetries: _config.maxRetries,
     );
     _fileHandler = LocaleFileHandler(_config.translationsPath);
-    // Look for excluded_keys.json in the assets directory (parent of translations)
-    final assetsDir = path.dirname(_config.translationsPath);
-    final excludedKeysPath = path.join(assetsDir, 'excluded_keys.json');
-    _excludedKeysHandler = ExcludedKeysHandler(excludedKeysPath);
+    _excludedKeysHandler = ExcludedKeysHandler(_config.excludedKeysPath);
   }
+
 
   Future<void> smartGenerate() async {
     try {

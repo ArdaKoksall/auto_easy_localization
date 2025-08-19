@@ -31,6 +31,7 @@ class PubspecConfigReader {
 
 class PubspecTranslationConfig {
   final String sourceLocale;
+  final String? excludedKeysPath;
   final List<String> targetLocales;
   final String translationsPath;
   final int delayBetweenRequests;
@@ -38,6 +39,7 @@ class PubspecTranslationConfig {
 
   const PubspecTranslationConfig({
     required this.sourceLocale,
+    this.excludedKeysPath,
     required this.targetLocales,
     required this.translationsPath,
     required this.delayBetweenRequests,

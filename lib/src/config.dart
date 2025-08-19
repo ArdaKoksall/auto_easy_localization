@@ -1,5 +1,6 @@
 class TranslationConfig {
   final String translationsPath;
+  final String excludedKeysPath;
   final String sourceLocale;
   final List<String> targetLocales;
   final bool overwriteExisting;
@@ -8,6 +9,7 @@ class TranslationConfig {
 
   const TranslationConfig({
     required this.translationsPath,
+    this.excludedKeysPath = 'assets/excluded_keys.json',
     required this.sourceLocale,
     required this.targetLocales,
     this.overwriteExisting = false,
@@ -24,6 +26,7 @@ class TranslationConfig {
     return TranslationConfig(
       translationsPath: translationsPath,
       sourceLocale: sourceLocale,
+      excludedKeysPath: 'assets/excluded_keys.json',
       targetLocales: ['es', 'fr', 'de', 'it', 'pt', 'nl', 'sv', 'da', 'no', 'tr'],
       overwriteExisting: overwriteExisting,
       delayBetweenRequests: delayBetweenRequests,
@@ -39,6 +42,7 @@ class TranslationConfig {
     return TranslationConfig(
       translationsPath: translationsPath,
       sourceLocale: sourceLocale,
+      excludedKeysPath: 'assets/excluded_keys.json',
       targetLocales: [
         'es',
         'fr',
@@ -67,6 +71,7 @@ class TranslationConfig {
     return TranslationConfig(
       translationsPath: translationsPath,
       sourceLocale: sourceLocale,
+      excludedKeysPath: 'assets/excluded_keys.json',
       targetLocales: ['zh', 'ja', 'ko', 'th', 'vi', 'id', 'ms', 'hi', 'bn'],
       overwriteExisting: overwriteExisting,
       delayBetweenRequests: delayBetweenRequests,
@@ -125,10 +130,12 @@ class TranslationConfig {
     List<String>? targetLocales,
     bool? overwriteExisting,
     int? delayBetweenRequests,
+    String? excludedKeysPath,
     int? maxRetries,
   }) {
     return TranslationConfig(
       translationsPath: translationsPath ?? this.translationsPath,
+      excludedKeysPath: excludedKeysPath ?? this.excludedKeysPath,
       sourceLocale: sourceLocale ?? this.sourceLocale,
       targetLocales: targetLocales ?? this.targetLocales,
       overwriteExisting: overwriteExisting ?? this.overwriteExisting,

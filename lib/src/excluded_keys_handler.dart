@@ -10,9 +10,9 @@ class ExcludedKeysHandler {
   /// Loads excluded keys from assets/excluded_keys.json if it exists
   Future<void> loadExcludedKeys() async {
     final file = File(excludedKeysPath);
-    
     if (!await file.exists()) {
       _excludedKeys = [];
+      print('⚠️  Warning: Excluded keys file not found at ${file.path}. No keys will be excluded.');
       return;
     }
 

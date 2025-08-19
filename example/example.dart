@@ -20,6 +20,8 @@ Future<void> main() async {
     // Adjust these for your needs
     delayBetweenRequests: 100,
     maxRetries: 3,
+    // Optional: specify a custom excluded keys file
+    // excludedKeysPath: 'assets/excluded_keys.json',
   );
 
   final validationErrors = config.validate();

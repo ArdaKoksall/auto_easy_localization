@@ -6,6 +6,7 @@ import 'package:auto_easy_localization/src/generator.dart';
 import 'package:auto_easy_localization/src/pubspec_read.dart';
 
 void main(List<String> arguments) async {
+
   final parser = ArgParser()
     ..addFlag('help', abbr: 'h', defaultsTo: false, help: 'Show help')
     ..addOption(
@@ -59,30 +60,39 @@ Future<TranslationConfig> _loadConfiguration(ArgResults results) async {
     final configReader = PubspecConfigReader();
     final pubspecConfig = await configReader.loadConfig(results['config']);
 
-    // Override with command line arguments if provided
-    final targetLocales = results['locales'].isNotEmpty
-        ? results['locales'].cast<String>()
-        : pubspecConfig?.targetLocales ?? ['tr', 'es', 'fr', 'de'];
+    if (pubspecConfig == null) {
+      throw PubspecException('Failed to load pubspec.yaml config');
+    }
+    //todo check fields
+
 
     return TranslationConfig(
       translationsPath:
-          results['path'] ??
-          pubspecConfig?.translationsPath ??
+          results['translations_path'] ??
+          pubspecConfig.translationsPath ??
           'assets/translations',
-      sourceLocale: results['source'] ?? pubspecConfig?.sourceLocale ?? 'en',
-      targetLocales: targetLocales,
+      excludedKeysPath: results['excludedKeysPath'] ??
+          pubspecConfig.excludedKeysPath ?? 'assets/excluded_keys.json',
+      sourceLocale: results['source_locale'] ?? pubspecConfig.sourceLocale ?? 'en',
+      targetLocales: results['target_locales'].cast<String>().isNotEmpty
+          ? results['target_locales'].cast<String>()
+          : pubspecConfig.targetLocales,
       overwriteExisting: false,
-      delayBetweenRequests: pubspecConfig?.delayBetweenRequests ?? 100,
-      maxRetries: pubspecConfig?.maxRetries ?? 3,
+      delayBetweenRequests: pubspecConfig.delayBetweenRequests,
+      maxRetries: pubspecConfig.maxRetries,
     );
   } catch (e) {
-    // Fallback to defaults if pubspec reading fails
+    if( e is! PubspecException) {
+      print('❌ Error loading pubspec.yaml: $e');
+    } else {
+      print("⚠️ Warning: Running with default configuration");
+    }
+
     return TranslationConfig(
-      translationsPath: results['path'] ?? 'assets/translations',
-      sourceLocale: results['source'] ?? 'en',
-      targetLocales: results['locales'].cast<String>().isNotEmpty
-          ? results['locales'].cast<String>()
-          : ['tr', 'es', 'fr', 'de'],
+      translationsPath: 'assets/translations',
+      sourceLocale: 'en',
+      excludedKeysPath: 'assets/excluded_keys.json',
+      targetLocales: ['tr', 'es', 'fr', 'de'],
       overwriteExisting: false,
       delayBetweenRequests: 100,
       maxRetries: 3,
@@ -100,7 +110,7 @@ Options:
 ${parser.usage}
 
 Examples:
-  # Smart mode (default) - only translate missing keys
+  # Smart mode (default) - only translate missing keys - with default locales
   dart run auto_easy_localization
 
   # Specify locales
@@ -117,4 +127,12 @@ auto_easy_localization:
   delay_between_requests: 100
   max_retries: 3
 ''');
+}
+
+class PubspecException implements Exception {
+  final String message;
+  PubspecException(this.message);
+
+  @override
+  String toString() => 'PubspecException: $message';
 }
