@@ -1,6 +1,7 @@
 {
   "app": {
     "title": "My App",
+    "author": "John Doe",
     "hello": "Hello",
     "welcome_user": "Welcome, {name}!"
   },

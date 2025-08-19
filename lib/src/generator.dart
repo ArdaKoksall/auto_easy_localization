@@ -1,16 +1,18 @@
 import 'dart:io';
-
+import 'package:path/path.dart' as path;
 
 import 'package:auto_easy_localization/src/progress_bar.dart';
 import 'package:auto_easy_localization/src/translate_service.dart';
 
 import 'config.dart';
+import 'excluded_keys_handler.dart';
 import 'locale_file_handler.dart';
 
 class AutoLocalizationGenerator {
   final TranslationConfig _config;
   late final GoogleTranslateService _translateService;
   late final LocaleFileHandler _fileHandler;
+  late final ExcludedKeysHandler _excludedKeysHandler;
 
   AutoLocalizationGenerator(this._config) {
     _translateService = GoogleTranslateService(
@@ -18,11 +20,18 @@ class AutoLocalizationGenerator {
       maxRetries: _config.maxRetries,
     );
     _fileHandler = LocaleFileHandler(_config.translationsPath);
+    // Look for excluded_keys.json in the assets directory (parent of translations)
+    final assetsDir = path.dirname(_config.translationsPath);
+    final excludedKeysPath = path.join(assetsDir, 'excluded_keys.json');
+    _excludedKeysHandler = ExcludedKeysHandler(excludedKeysPath);
   }
 
   Future<void> smartGenerate() async {
     try {
       await _validateSetup();
+      
+      // Load excluded keys
+      await _excludedKeysHandler.loadExcludedKeys();
 
       final sourceTranslations = await _fileHandler.readLocaleFile(_config.sourceLocale);
       final existingLocales = await _fileHandler.getExistingLocales();
@@ -128,13 +137,32 @@ class AutoLocalizationGenerator {
 
     if (missingKeys.isEmpty) return;
 
-    final translatedMissingKeys = await _translateService.translateBatch(
-      missingKeys,
-      _config.sourceLocale,
-      targetLocale,
-    );
+    // Filter out excluded keys from translation but keep them in the final file
+    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(missingKeys);
+    final excludedKeysInMissing = <String, String>{};
+    
+    // Collect excluded keys that should not be translated
+    for (final entry in missingKeys.entries) {
+      if (_excludedKeysHandler.isKeyExcluded(entry.key)) {
+        excludedKeysInMissing[entry.key] = entry.value; // Keep original value
+      }
+    }
 
-    final updatedTranslations = {...existingTranslations, ...translatedMissingKeys};
+    // Translate only non-excluded keys
+    final translatedKeys = keysToTranslate.isNotEmpty 
+        ? await _translateService.translateBatch(
+            keysToTranslate,
+            _config.sourceLocale,
+            targetLocale,
+          )
+        : <String, String>{};
+
+    // Combine translated keys with excluded keys (keeping original values)
+    final updatedTranslations = {
+      ...existingTranslations, 
+      ...translatedKeys,
+      ...excludedKeysInMissing,
+    };
 
     await _fileHandler.writeLocaleFile(
       targetLocale,
@@ -151,15 +179,35 @@ class AutoLocalizationGenerator {
       return;
     }
 
-    final translatedTexts = await _translateService.translateBatch(
-      sourceTranslations,
-      _config.sourceLocale,
-      targetLocale,
-    );
+    // Filter out excluded keys from translation but keep them in the final file
+    final keysToTranslate = _excludedKeysHandler.filterExcludedKeys(sourceTranslations);
+    final excludedKeys = <String, String>{};
+    
+    // Collect excluded keys that should not be translated
+    for (final entry in sourceTranslations.entries) {
+      if (_excludedKeysHandler.isKeyExcluded(entry.key)) {
+        excludedKeys[entry.key] = entry.value; // Keep original value
+      }
+    }
+
+    // Translate only non-excluded keys
+    final translatedKeys = keysToTranslate.isNotEmpty 
+        ? await _translateService.translateBatch(
+            keysToTranslate,
+            _config.sourceLocale,
+            targetLocale,
+          )
+        : <String, String>{};
+
+    // Combine translated keys with excluded keys (keeping original values)
+    final finalTranslations = {
+      ...translatedKeys,
+      ...excludedKeys,
+    };
 
     await _fileHandler.writeLocaleFile(
       targetLocale,
-      translatedTexts,
+      finalTranslations,
       overwrite: _config.overwriteExisting,
     );
   }

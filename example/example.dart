@@ -32,9 +32,13 @@ Future<void> main() async {
   }
 
   // 3) Run generator
+  // NOTE: The generator will automatically check for assets/excluded_keys.json
+  // If it exists, keys listed there (like "app.title", "app.author") will not be translated
+  // but will be copied to target locale files with their original values.
   final generator = AutoLocalizationGenerator(config);
 
   stdout.writeln('Starting smart generation in: ${config.translationsPath}');
+  stdout.writeln('🔧 Excluded keys will be loaded from assets/excluded_keys.json if it exists');
   try {
     await generator.smartGenerate();
 
