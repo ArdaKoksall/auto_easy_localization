@@ -1,5 +1,6 @@
 // Example usage for auto_easy_localization
-// Run with: dart run example/example.dart
+// This example shows programmatic usage. For most use cases,
+// prefer configuring via pubspec.yaml and running: dart run auto_easy_localization
 
 import 'dart:io';
 
@@ -7,8 +8,25 @@ import 'package:auto_easy_localization/auto_easy_localization.dart';
 import 'package:path/path.dart' as p;
 
 Future<void> main() async {
+  print('🌐 Auto Easy Localization Example');
+  print('');
+  print('For normal usage, add configuration to your pubspec.yaml:');
+  print('');
+  print('auto_easy_localization:');
+  print('  source_locale: en');
+  print('  target_locales: [fr, es, de, it, tr]');
+  print('  translations_path: assets/translations');
+  print('  delay_between_requests: 100');
+  print('  max_retries: 3');
+  print('');
+  print('Then run: dart run auto_easy_localization');
+  print('');
+  print('--- Programmatic Usage Example ---');
+
   // 1) Example directory structure.
-  final translationsDir = Directory(p.join('example', 'assets', 'translations'));
+  final translationsDir = Directory(
+    p.join('example', 'assets', 'translations'),
+  );
 
   // 2) Configure generator (use a small set of targets for demo)
   final config = TranslationConfig(
@@ -40,7 +58,9 @@ Future<void> main() async {
   final generator = AutoLocalizationGenerator(config);
 
   stdout.writeln('Starting smart generation in: ${config.translationsPath}');
-  stdout.writeln('🔧 Excluded keys will be loaded from assets/excluded_keys.json if it exists');
+  stdout.writeln(
+    '🔧 Excluded keys will be loaded from assets/excluded_keys.json if it exists',
+  );
   try {
     await generator.smartGenerate();
 
@@ -48,10 +68,11 @@ Future<void> main() async {
     final stats = await generator.getStats();
     stdout
       ..writeln(stats.toString())
-      ..writeln('Example complete. Check generated *.json files under ${config.translationsPath}');
+      ..writeln(
+        'Example complete. Check generated *.json files under ${config.translationsPath}',
+      );
   } catch (e) {
     stderr.writeln('Generation failed: $e');
     exit(1);
   }
 }
-

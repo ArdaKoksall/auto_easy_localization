@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:path/path.dart' as path;
 
 import 'package:auto_easy_localization/src/progress_bar.dart';
 import 'package:auto_easy_localization/src/translate_service.dart';
