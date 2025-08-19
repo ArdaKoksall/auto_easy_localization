@@ -20,7 +20,7 @@ class PubspecConfigReader {
             (config['target_locales'] as List?)?.cast<String>() ?? [],
         translationsPath:
             config['translations_path']?.toString() ?? 'assets/translations',
-        delayBetweenRequests: config['delay_between_requests'] ?? 1000,
+        delayBetweenRequests: config['delay_between_requests'] ?? 100,
         maxRetries: config['max_retries'] ?? 3,
       );
     } catch (e) {

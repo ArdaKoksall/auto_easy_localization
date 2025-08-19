@@ -7,7 +7,7 @@ import 'package:auto_easy_localization/auto_easy_localization.dart';
 import 'package:path/path.dart' as p;
 
 Future<void> main() async {
-  // 1) Prepare example translations directory and a minimal en.json
+  // 1) Example directory structure.
   final translationsDir = Directory(p.join('example', 'assets', 'translations'));
 
   // 2) Configure generator (use a small set of targets for demo)

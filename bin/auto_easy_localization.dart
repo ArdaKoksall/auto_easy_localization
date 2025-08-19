@@ -72,7 +72,7 @@ Future<TranslationConfig> _loadConfiguration(ArgResults results) async {
       sourceLocale: results['source'] ?? pubspecConfig?.sourceLocale ?? 'en',
       targetLocales: targetLocales,
       overwriteExisting: false,
-      delayBetweenRequests: pubspecConfig?.delayBetweenRequests ?? 1000,
+      delayBetweenRequests: pubspecConfig?.delayBetweenRequests ?? 100,
       maxRetries: pubspecConfig?.maxRetries ?? 3,
     );
   } catch (e) {
@@ -84,7 +84,7 @@ Future<TranslationConfig> _loadConfiguration(ArgResults results) async {
           ? results['locales'].cast<String>()
           : ['tr', 'es', 'fr', 'de'],
       overwriteExisting: false,
-      delayBetweenRequests: 1000,
+      delayBetweenRequests: 100,
       maxRetries: 3,
     );
   }
@@ -114,7 +114,7 @@ auto_easy_localization:
   source_locale: en
   target_locales: [tr, es, fr, de, it]
   translations_path: assets/translations
-  delay_between_requests: 1000
+  delay_between_requests: 100
   max_retries: 3
 ''');
 }
