@@ -14,10 +14,62 @@ class PubspecConfigReader {
 
       if (config == null) return null;
 
+      List<String>? targetLocalesData;
+
+      if (config['target_locales'] is String) {
+        switch (config['target_locales']) {
+          case 'european':
+            targetLocalesData = [
+              'es',
+              'fr',
+              'de',
+              'it',
+              'pt',
+              'nl',
+              'sv',
+              'da',
+              'no',
+              'tr',
+            ];
+            break;
+          case 'global':
+            targetLocalesData = [
+              'es',
+              'fr',
+              'de',
+              'it',
+              'pt',
+              'ru',
+              'ja',
+              'ko',
+              'zh',
+              'ar',
+              'hi',
+              'tr',
+            ];
+            break;
+          case 'asian':
+            targetLocalesData = [
+              'zh',
+              'ja',
+              'ko',
+              'th',
+              'vi',
+              'id',
+              'ms',
+              'hi',
+              'bn',
+            ];
+            break;
+        }
+      }
+
       return PubspecTranslationConfig(
         sourceLocale: config['source_locale']?.toString() ?? 'en',
         targetLocales:
-            (config['target_locales'] as List?)?.cast<String>() ?? [],
+            targetLocalesData ??
+            (config['target_locales'] as List?)?.cast<String>() ??
+            [],
         translationsPath:
             config['translations_path']?.toString() ?? 'assets/translations',
         excludedKeysPath: config['excluded_keys_path']?.toString(),

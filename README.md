@@ -24,6 +24,12 @@ dev_dependencies:
   auto_easy_localization: ^0.0.4
 ```
 
+Or run the following command:
+
+```bash
+flutter pub add auto_easy_localization --dev
+```
+
 ## Quick Start
 
 1. **Create your source translation file** (`assets/translations/en.json`):
@@ -74,7 +80,7 @@ All configuration is managed through your `pubspec.yaml` file. Add the `auto_eas
 ```yaml
 auto_easy_localization:
   source_locale: en # Source language (required)
-  target_locales: [tr, es, fr, de, it] # Target languages (required)
+  target_locales: [tr, es, fr, de, it] # Target languages (required) - can also use presets: european, global, asian
   translations_path: assets/translations # Path to translation files (optional, default: assets/translations)
   delay_between_requests: 100 # Delay between API calls in ms (optional, default: 100)
   max_retries: 3 # Maximum retry attempts (optional, default: 3)
@@ -82,14 +88,14 @@ auto_easy_localization:
 
 ### Configuration Options
 
-| Option                   | Type         | Required | Default                     | Description                                              |
-| ------------------------ | ------------ | -------- | --------------------------- | -------------------------------------------------------- |
-| `source_locale`          | String       | ✅       | `en`                        | The source language code                                 |
-| `target_locales`         | List<String> | ✅       | `[tr, es, fr, de]`          | List of target language codes                            |
-| `translations_path`      | String       | ❌       | `assets/translations`       | Path to translation files directory                      |
-| `delay_between_requests` | int          | ❌       | `100`                       | Delay between API requests (milliseconds)                |
-| `max_retries`            | int          | ❌       | `3`                         | Maximum number of retry attempts for failed translations |
-| `excluded_keys_path`     | String       | ❌       | `assets/excluded_keys.json` | Path to excluded keys file                               |
+| Option                   | Type                   | Required | Default                     | Description                                                                     |
+| ------------------------ | ---------------------- | -------- | --------------------------- | ------------------------------------------------------------------------------- |
+| `source_locale`          | String                 | ✅       | `en`                        | The source language code                                                        |
+| `target_locales`         | List<String> or String | ✅       | `[tr, es, fr, de]`          | List of target language codes OR preset keyword (`european`, `global`, `asian`) |
+| `translations_path`      | String                 | ❌       | `assets/translations`       | Path to translation files directory                                             |
+| `delay_between_requests` | int                    | ❌       | `100`                       | Delay between API requests (milliseconds)                                       |
+| `max_retries`            | int                    | ❌       | `3`                         | Maximum number of retry attempts for failed translations                        |
+| `excluded_keys_path`     | String                 | ❌       | `assets/excluded_keys.json` | Path to excluded keys file                                                      |
 
 ### Default Configuration
 
@@ -107,32 +113,56 @@ auto_easy_localization:
 
 ## Preset Configurations
 
-The tool includes predefined locale sets for common use cases. You can use these presets directly in your configuration:
+The tool includes predefined locale sets for common use cases. You can use these presets in two ways:
 
-### European Languages
+### Option 1: Using Preset Keywords (Recommended)
+
+Simply use preset keywords as string values for `target_locales`:
+
+```yaml
+auto_easy_localization:
+  source_locale: en
+  target_locales: european # Uses predefined European language set
+  translations_path: assets/translations
+```
+
+**Available Presets:**
+
+#### European Languages (`european`)
+
+```yaml
+auto_easy_localization:
+  source_locale: en
+  target_locales: european
+  # Includes: es, fr, de, it, pt, nl, sv, da, no, tr
+```
+
+#### Global Languages (`global`)
+
+```yaml
+auto_easy_localization:
+  source_locale: en
+  target_locales: global
+  # Includes: es, fr, de, it, pt, ru, ja, ko, zh, ar, hi, tr
+```
+
+#### Asian Languages (`asian`)
+
+```yaml
+auto_easy_localization:
+  source_locale: en
+  target_locales: asian
+  # Includes: zh, ja, ko, th, vi, id, ms, hi, bn
+```
+
+### Option 2: Manual List Configuration
+
+Alternatively, you can specify locales manually as a list:
 
 ```yaml
 auto_easy_localization:
   source_locale: en
   target_locales: [es, fr, de, it, pt, nl, sv, da, no, tr]
-  translations_path: assets/translations
-```
-
-### Global Languages
-
-```yaml
-auto_easy_localization:
-  source_locale: en
-  target_locales: [es, fr, de, it, pt, ru, ja, ko, zh, ar, hi, tr]
-  translations_path: assets/translations
-```
-
-### Asian Languages
-
-```yaml
-auto_easy_localization:
-  source_locale: en
-  target_locales: [zh, ja, ko, th, vi, id, ms, hi, bn]
   translations_path: assets/translations
 ```
 
@@ -239,13 +269,22 @@ auto_easy_localization:
   target_locales: [es, fr, de, it]
 ```
 
+#### Using Presets
+
+```yaml
+# pubspec.yaml
+auto_easy_localization:
+  source_locale: en
+  target_locales: european # Automatically includes 10 European languages
+```
+
 #### Advanced Configuration
 
 ```yaml
 # pubspec.yaml
 auto_easy_localization:
   source_locale: en
-  target_locales: [es, fr, de, it, pt, ru, ja, zh]
+  target_locales: global # Includes 12 major world languages
   translations_path: lib/l10n
   delay_between_requests: 1500
   max_retries: 5

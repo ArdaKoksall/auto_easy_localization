@@ -17,66 +17,6 @@ class TranslationConfig {
     this.maxRetries = 3,
   });
 
-  factory TranslationConfig.european({
-    required String translationsPath,
-    String sourceLocale = 'en',
-    bool overwriteExisting = false,
-    int delayBetweenRequests = 100,
-  }) {
-    return TranslationConfig(
-      translationsPath: translationsPath,
-      sourceLocale: sourceLocale,
-      excludedKeysPath: 'assets/excluded_keys.json',
-      targetLocales: ['es', 'fr', 'de', 'it', 'pt', 'nl', 'sv', 'da', 'no', 'tr'],
-      overwriteExisting: overwriteExisting,
-      delayBetweenRequests: delayBetweenRequests,
-    );
-  }
-
-  factory TranslationConfig.global({
-    required String translationsPath,
-    String sourceLocale = 'en',
-    bool overwriteExisting = false,
-    int delayBetweenRequests = 100,
-  }) {
-    return TranslationConfig(
-      translationsPath: translationsPath,
-      sourceLocale: sourceLocale,
-      excludedKeysPath: 'assets/excluded_keys.json',
-      targetLocales: [
-        'es',
-        'fr',
-        'de',
-        'it',
-        'pt',
-        'ru',
-        'ja',
-        'ko',
-        'zh',
-        'ar',
-        'hi',
-        'tr',
-      ],
-      overwriteExisting: overwriteExisting,
-      delayBetweenRequests: delayBetweenRequests,
-    );
-  }
-
-  factory TranslationConfig.asian({
-    required String translationsPath,
-    String sourceLocale = 'en',
-    bool overwriteExisting = false,
-    int delayBetweenRequests = 100,
-  }) {
-    return TranslationConfig(
-      translationsPath: translationsPath,
-      sourceLocale: sourceLocale,
-      excludedKeysPath: 'assets/excluded_keys.json',
-      targetLocales: ['zh', 'ja', 'ko', 'th', 'vi', 'id', 'ms', 'hi', 'bn'],
-      overwriteExisting: overwriteExisting,
-      delayBetweenRequests: delayBetweenRequests,
-    );
-  }
 
   List<String> validate() {
     final errors = <String>[];
